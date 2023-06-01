@@ -79,24 +79,9 @@ fun GetDigitsKundenochmal (Benutzer: User, furhat: Furhat, field: String) {
     }
 }
 
-
-
-
-
-fun qrCodeScan13(benutzer: User?) {
+/*fun qrCodeScan13(benutzer: User) {
     val imageInput: BufferedImage? = captureImageFromSocket1()
 
-//image input ist nicht null dann soll qr ausgeführt werden und zweite bedingung containsqrcode
-//hier der QRCode reader dann hin, sonst wird dieser doppel ausgeführt
-
-    if (imageInput == null || !containsQRCode(imageInput)) {
-        // Wenn kein Bild übergeben wurde oder das Bild keinen QR-Code enthält,
-        // rufe die Funktion rekursiv neu auf
-        Thread.sleep(2000) // Füge eine Verzögerung von einer halben Sekunde ein
-
-
-        qrCodeScan13(Benutzer)
-    } else {
         val luminanceSource = RGBLuminanceSource(imageInput.width, imageInput.height, getPixels2(imageInput))
         val binaryBitmap = BinaryBitmap(HybridBinarizer(luminanceSource))
 
@@ -105,9 +90,11 @@ fun qrCodeScan13(benutzer: User?) {
 
         println("QR Code Text: ${result.text}")
         val barcodeText: String = result.text
-        Benutzer?.put("QR Code Text", barcodeText) // Speichert den erkannten QR-Code-Text im Benutzerobjekt
-    }
+        benutzer.put("QR Code Text", barcodeText) // Speichert den erkannten QR-Code-Text im Benutzerobjekt
+
 }
+
+ */
 fun containsQRCode(image: BufferedImage): Boolean {
     val luminanceSource = RGBLuminanceSource(image.width, image.height, getPixels2(image))
     val binaryBitmap = BinaryBitmap(HybridBinarizer(luminanceSource))
@@ -136,9 +123,9 @@ fun getPixels2(image: BufferedImage): IntArray {
 
 
 
-fun captureImageFromSocket1(): BufferedImage? {
-    val context = ZMQ.context(1)
-    val subscriber = context.socket(SocketType.SUB)
+fun captureImageFromSocket(benutzer: User) {
+    val context = ZContext()
+    val subscriber = context.createSocket(SocketType.SUB)
 
     // Verbinde den Socket mit dem ZMQ.SUB-Socket
     subscriber.connect("tcp://10.198.0.37:3000")
@@ -146,41 +133,45 @@ fun captureImageFromSocket1(): BufferedImage? {
     // Setze den Filter auf leeren String, um alle Nachrichten zu empfangen
     subscriber.subscribe("".toByteArray())
 
-    val imageInput: BufferedImage?
+    var imageInput: BufferedImage?
 
     // Empfange eine Nachricht
     val message = subscriber.recv(0)
 
-    if (message != null && message.isNotEmpty()) {
-        // Verarbeite das empfangene Bild
-        val image = ImageIO.read(ByteArrayInputStream(message))
-        // Speichere das empfangene Bild als latestImage
-        imageInput = image
-    } else {
-        imageInput = null
-    }
-
-
-
     // Schließe den Socket und den Kontext
     subscriber.close()
-    context.term()
+    context.close()
 
-    return imageInput
+    // Überprüfe, ob eine Nachricht empfangen wurde
+    if (message != null) {
+        // Verarbeite das empfangene Bild
+        val image = ImageIO.read(ByteArrayInputStream(message))
+
+        // Speichere das empfangene Bild als latestImage
+        imageInput = image
+
+        if (!containsQRCode(imageInput)) {
+            // Wenn kein Bild übergeben wurde oder das Bild keinen QR-Code enthält,
+            // rufe die Funktion rekursiv neu auf
+            Thread.sleep(1000) // Füge eine Verzögerung von einer halben Sekunde ein
+
+            captureImageFromSocket(benutzer)
+        } else {
+            val luminanceSource = RGBLuminanceSource(imageInput.width, imageInput.height, getPixels2(imageInput))
+            val binaryBitmap = BinaryBitmap(HybridBinarizer(luminanceSource))
+
+            val reader = MultiFormatReader()
+            val result = reader.decode(binaryBitmap)
+
+            println("QR Code Text: ${result.text}")
+            val barcodeText: String = result.text
+            benutzer.put("QR Code Text", barcodeText) // Speichert den erkannten QR-Code-Text im Benutzerobjekt
+        }
+    } else {
+        // Keine Nachricht empfangen - handle den Fall entsprechend
+        // Zum Beispiel eine Fehlermeldung ausgeben oder weitere Maßnahmen ergreifen
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*

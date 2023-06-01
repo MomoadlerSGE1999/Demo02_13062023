@@ -56,22 +56,22 @@ val Greeting : State = state(Parent) {
     onResponse<QRCode>{
         Benutzer = users.current
         furhat.say("Okay, dann zeig mal her")
-        qrCodeScan13(Benutzer!!)
+        captureImageFromSocket(benutzer = Benutzer!!)
+        furhat.say("${Benutzer!!.get("QR Code Text")}")
         Benutzer!!.put("Patientennummer", Benutzer!!.get("QR Code Text"))
         furhat.say("${Benutzer!!.get("Patientennummer")}")
-        furhat.say("${Benutzer!!.get("QR Code Text")}")
-        ReadExcel(Benutzer!!)
+        ReadExcel(Benutzer!!, this.furhat)
         val raumy: Any? = Benutzer!!.get("raum")
         val platzx: Any? = Benutzer!!.get("platz")
-        val dialysebeginn: Any? = furhat.voice.sayAs(Benutzer!!.get("dialysebeginn").toString(), Voice.SayAsType.TIME)
-        val dialyseende: Any? = furhat.voice.sayAs(Benutzer!!.get("dialyseende").toString(), Voice.SayAsType.TIME)
+        //val dialysebeginn: Any? = furhat.voice.sayAs(Benutzer!!.get("dialysebeginn").toString(), Voice.SayAsType.TIME)
+       // val dialyseende: Any? = furhat.voice.sayAs(Benutzer!!.get("dialyseende").toString(), Voice.SayAsType.TIME)
 
         //Der Nutzer wird über seine Termindaten informiert und weiß somit, wann, wo und wie lange seine Dialyse
         //stattfinden wird.
         furhat.say (
             "Gut, ${Benutzer!!.get("name")}. Ich würde Sie ${furhat.voice.emphasis("bittten")} in " +
                     "den${furhat.voice.emphasis("$raumy")} an den  PLatz ${furhat.voice.emphasis("$platzx")} " +
-                    "zu gehen. Ihre Dialyse fängt um $dialysebeginn an und endet um $dialyseende"
+                    "zu gehen. Ihre Dialyse fängt um dialysebeginn an und endet um dialyseende"
         )
         goto(Idle)
     }

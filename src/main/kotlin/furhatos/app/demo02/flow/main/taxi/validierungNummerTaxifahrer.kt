@@ -32,7 +32,7 @@ val ValidierungNummerKundealt : State = state(Parent) {
         //Benutzer wird für die Funktion ReadExcelTaxi gesetzt
         Benutzer = users.getUser(it.userId)
 
-            ReadExcel(Benutzer!!)
+            ReadExcel(Benutzer!!, this.furhat)
         //Hat der Benutzer keinen Termin, wird das field "Row" des Benutzers mit -1 beschrieben und die If-Bedingung
         //trifft zu. Sollte der Benutzer keinen Termin haben wird er darüber informiert. Die Interaktion endet dann.
             if (Benutzer!!.get("row") == -1) {

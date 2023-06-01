@@ -12,11 +12,13 @@ import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
 import furhat.libraries.standard.UsersLib.usersLib
+import furhatos.flow.kotlin.Furhat
+import furhatos.flow.kotlin.furhat
 
 //Die Funktion ReadExcel wurde extra für das Excelformat des Patientenbelegungsplans geschrieben, sodass es beim
 //Verstehen des Codes absolut notwendig ist, das Format des Patientenbelegungsplans zu kennen.
 
-fun ReadExcel(Benutzer: User) {
+fun ReadExcel(benutzer: User, furhat: Furhat) {
 
 // Zunächst wird der Pfad definiert, in dem die jeweils relevante Excel-Datei abgelegt ist.
     val csvFile: String = "N:\\Projekte\\Robotik\\Furhat\\projekte\\Belegeplan_Dialysezentrum\\Furhat.csv"
@@ -25,9 +27,11 @@ fun ReadExcel(Benutzer: User) {
     val separator = ";"
 
 
-    var searchNum: String = Benutzer.get("Patientennummer").toString()
+    var searchNum: String = Benutzer!!.get("Patientennummer").toString()
+    furhat.say("${furhatos.app.demo02.flow.main.general.Benutzer!!.get("Patientennummer")} und du bist in der Funktion")
 
- Benutzer.put("raum", null)
+
+    benutzer.put("raum", null)
 
 
     try {
@@ -46,10 +50,12 @@ fun ReadExcel(Benutzer: User) {
                     val platz = data[4].trim()
                     val Beginn =data[5]
                     val Ende = data[6]
-                    Benutzer.put("raum", raum2)
-                    Benutzer.put("platz", platz)
-                    Benutzer.put("dialysebeginn", Beginn)
-                    Benutzer.put("dialyseende", Ende)
+                    benutzer.put("raum", raum2)
+                    benutzer.put("platz", platz)
+                    benutzer.put("dialysebeginn", Beginn)
+                    benutzer.put("dialyseende", Ende)
+                    furhat.say("${furhatos.app.demo02.flow.main.general.Benutzer!!.get("dialyseende")} " +
+                            "und du bist in der Funktion")
                     println(raum2)
                     println(platz)
                     println(Beginn)

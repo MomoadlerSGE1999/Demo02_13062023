@@ -32,7 +32,7 @@ val ValidierungNummerKunde : State = state(Parent) {
         onResponse<Ja> {
 
             //Die Funktion ReadExcel wird aufgerufen und auf den Benutzer angewendet.
-            ReadExcel(Benutzer!!)
+            ReadExcel(Benutzer!!, this.furhat)
 
             //Hat der Benutzer keinen Termin, wird das field "Kein Termin" des Benutzers mit -1 beschrieben und die If-Bedingung
             //trifft zu. Sollte der Benutzer keinen Termin haben wird er darüber informiert, die Interaktion endet dann.

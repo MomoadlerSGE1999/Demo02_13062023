@@ -23,9 +23,7 @@ val Idle: State = state (Parent) {
             goto(Greeting)
         }
         //Falls genau 0 User in Furhat's Reichweite sind, schaut er niemanden an.
-        else(
-                furhat.attendNobody()
-                )
+        else(furhat.attendNobody())
     }
     //Tritt ein User in Sichtweite Furhat's triggert der Befehl onUserEnter
     //Der User wird in OnUserEnter mit "it" definiert.

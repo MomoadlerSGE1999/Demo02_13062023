@@ -7,6 +7,7 @@ import furhatos.autobehavior.enableSmileBack
 import furhatos.autobehavior.setDefaultMicroexpression
 import furhatos.flow.kotlin.*
 import furhatos.flow.kotlin.voice.PollyVoice
+import java.io.File
 
 //Im State "Init" werden Parameter des Skills vor jedem Start initialisiert. States werden als Werte definiert.
 //Die Klammer hinter "state" regelt die Vererbung von anderen States. In diesem Fall erbt der State vom State "Parent".
@@ -32,6 +33,11 @@ val Init : State = state() {
         //Mit users.setSimpleEngagementPolicy werden von Furhat Robotics definierte Default-Werte gesetzt.
         //Die Defaultwerte umfassen zum Beispiel die maximale Anzahl an zugelassenen Gesprächspartnern.
         users.setSimpleEngagementPolicy(distanceToEngage, maxNumberOfUsers)
+
+        //val logFile = File("N:\\Projekte\\Robotik\\Furhat\\projekte\\Demo02\\Flowlogger") //Log file can have any extension.
+        //flowLogger.start(logFile) //Start the logger
+        furhat.cameraFeed.enable()
+
 
         //Mit dem goto() Befehl definiert man welcher State der Anwendung als nächstes eingeleitet wird.
         goto(Idle)
