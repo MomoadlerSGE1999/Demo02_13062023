@@ -21,6 +21,9 @@ import java.io.File
 import javax.imageio.ImageIO
 import org.zeromq.ZMQ
 import java.io.ByteArrayInputStream
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 
 
 //In der helper.kt sind alle benötigten Funktionen der Interaktion definiert.
@@ -128,7 +131,7 @@ fun captureImageFromSocket(benutzer: User) {
     val subscriber = context.createSocket(SocketType.SUB)
 
     // Verbinde den Socket mit dem ZMQ.SUB-Socket
-    subscriber.connect("tcp://10.198.0.37:3000")
+    subscriber.connect("tcp://10.198.3.150:3000")
 
     // Setze den Filter auf leeren String, um alle Nachrichten zu empfangen
     subscriber.subscribe("".toByteArray())
@@ -153,7 +156,7 @@ fun captureImageFromSocket(benutzer: User) {
         if (!containsQRCode(imageInput)) {
             // Wenn kein Bild übergeben wurde oder das Bild keinen QR-Code enthält,
             // rufe die Funktion rekursiv neu auf
-            Thread.sleep(1000) // Füge eine Verzögerung von einer halben Sekunde ein
+            Thread.sleep(2000) // Füge eine Verzögerung von einer halben Sekunde ein
 
             captureImageFromSocket(benutzer)
         } else {
@@ -170,6 +173,23 @@ fun captureImageFromSocket(benutzer: User) {
     } else {
         // Keine Nachricht empfangen - handle den Fall entsprechend
         // Zum Beispiel eine Fehlermeldung ausgeben oder weitere Maßnahmen ergreifen
+    }
+}
+
+fun Serverconnect() {
+    val client = OkHttpClient()
+
+    val request = Request.Builder()
+        .url("https://example.com") // Ersetze "example.com" durch die URL des Servers, den du aufrufen möchtest
+        .build()
+
+    val response: Response = client.newCall(request).execute()
+
+    if (response.isSuccessful) {
+        val responseBody = response.body?.string()
+        println("Antwort des Servers: $responseBody")
+    } else {
+        println("Fehler: ${response.code}")
     }
 }
 

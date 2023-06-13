@@ -43,6 +43,7 @@ fun ReadExcel(benutzer: User, furhat: Furhat) {
             while (reader.readLine().also { line = it } != null) {
                 val data = line!!.split(separator)
                 val currentPatNr = data[1].trim()
+                furhat.say("$currentPatNr")
 
                 if (currentPatNr == searchNum) {
                     val raum = data[3].trim()
@@ -67,6 +68,7 @@ fun ReadExcel(benutzer: User, furhat: Furhat) {
             }
         }
     } catch (e: IOException) {
+        furhat.say("Nicht gefunden")
         e.printStackTrace()
     }
 }

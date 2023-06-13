@@ -7,6 +7,7 @@ import furhatos.autobehavior.enableSmileBack
 import furhatos.autobehavior.setDefaultMicroexpression
 import furhatos.flow.kotlin.*
 import furhatos.flow.kotlin.voice.PollyVoice
+import furhatos.util.Language
 import java.io.File
 
 //Im State "Init" werden Parameter des Skills vor jedem Start initialisiert. States werden als Werte definiert.
@@ -18,6 +19,8 @@ val Init : State = state() {
         //Der dialogLogger sorgt dafür, dass die Gespräche mit Furhat unter
         //dem Pfad: C:\Users\Benutzer\.furhat\logs protokolliert werden.
         dialogLogger.startSession()
+
+        furhat.setInputLanguage(Language.GERMAN)
 
         //Mit furhat.voice wird die NLU ausgewählt, die Furhat für die Interaktion verwenden soll.
         furhat.voice = PollyVoice.Hans()

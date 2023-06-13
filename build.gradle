@@ -51,6 +51,7 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.2")
     implementation 'com.google.zxing:core:3.4.1'
     implementation("org.zeromq:jeromq:+")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
 }
 
 jar {
